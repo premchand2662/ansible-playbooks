@@ -1,0 +1,12 @@
+---
+- hosts: all
+  become: yes
+  tasks: 
+     
+     - name: create user priyatham
+       user: 
+         name: priytham
+         uid: 1100
+         home: /home/kp
+         shell: /bin/sh
+
