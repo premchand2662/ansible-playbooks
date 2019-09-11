@@ -1,0 +1,41 @@
+---
+ - hosts: ubuntu
+   become: yes
+   gather_facts: yes
+   tasks: 
+
+     - name: install java
+       apt: 
+         
+         name: openjdk-8-jdk
+         state: present
+
+     - name: adding repo key
+       apt_key:
+         url: https://pkg.jenkins.io/debian/jenkins-ci.org.key 
+         state: present
+       tags: key
+
+     - name: adding repository for jenkins
+       apt_repository: 
+         repo: deb http://pkg.jenkins.io/debian-stable binary/
+         state: present
+         filename: jenkins.list
+       tags: repo
+     - name: install jenkins
+       apt:
+         name: jenkins
+         state: present
+         update_cache: yes
+     
+     - name: change port number
+       replace :
+         path: /etc/default/jenkins
+         regexp: HTTP_PORT=8080
+         replace: HTTP_PORT=9090
+
+     - name: restart jenkins
+       service:
+         name: jenkins
+         state: restarted
+           
